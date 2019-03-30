@@ -11,8 +11,8 @@ public class PlayerTransformation : MonoBehaviour
 
     void Awake()
     {
-        humanForm = GameObject.Find("HumanCapsule");
-        creatureForm = GameObject.Find("CreatureCapsule");
+        humanForm = transform.Find("HumanCapsule").gameObject;
+        creatureForm = transform.Find("CreatureCapsule").gameObject;
         humanForm.SetActive(true);
         creatureForm.SetActive(false);
     }
