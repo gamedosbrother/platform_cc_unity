@@ -1,19 +1,14 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement
 {
- 
-    [Header("Movement")]
-    [SerializeField]
-    private float moveSpeed;
-    [SerializeField]
-    private float acceleration;
-    [Header("Jump")]
-    [SerializeField]
-    private float jumpHeight;
-    [SerializeField]
+    
+    private float moveSpeed = 5;
+    private float acceleration = 25;
+
+    private float jumpHeight = 2;
     private int airJumpsAmount = 1;
 
     private float gravity;
@@ -26,56 +21,40 @@ public class PlayerMovement : MonoBehaviour
 
     private float verticalSpeed;
 
-    private CharacterController characterController;
+    private IMovementComponent movementComponent;
 
-    void Awake()
+    public PlayerMovement(IMovementComponent _movementComponent, float _moveSpeed, float _acceleration, float _jumpHeight, int _airJumpsAmount, float _gravity = 10f)
     {
-        characterController = GetComponent<CharacterController>();
+        movementComponent = _movementComponent;
+        
+        moveSpeed = _moveSpeed;
+        acceleration = _acceleration;
+        jumpHeight = _jumpHeight;
+        airJumpsAmount = _airJumpsAmount;
 
-        gravity = 10f;
+        gravity = _gravity;
         jumpForce = Mathf.Sqrt(jumpHeight * 2f * gravity);
     }
 
-    void Update()
+    public void ApplyDirection(Vector3 direction)
     {
-        float verticalMovement = Input.GetAxisRaw("Vertical");
-        float horizontalMovement = Input.GetAxisRaw("Horizontal");
-
-        targetMoveVelocity = (transform.forward * moveSpeed * verticalMovement) + (transform.right * moveSpeed * horizontalMovement);
-
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            if(characterController.isGrounded)
-            {
-                Jump();
-            }
-            else if(++airJumpsPerformed <= airJumpsAmount)
-            {
-                Jump();
-            }
-        }
+        targetMoveVelocity = direction * moveSpeed;
     }
 
-    void Jump()
+    public void Move(float deltaTime)
     {
-        verticalSpeed = jumpForce;
-    }
+        moveVelocity = Vector3.MoveTowards(moveVelocity, targetMoveVelocity, acceleration * deltaTime);
 
-    void FixedUpdate()
-    {
-        moveVelocity = Vector3.MoveTowards(moveVelocity, targetMoveVelocity, acceleration * Time.fixedDeltaTime);
-
-        verticalSpeed -= gravity * Time.fixedDeltaTime;
+        verticalSpeed -= gravity * deltaTime;
 
         Vector3 velocity = moveVelocity;
         velocity.y = verticalSpeed;
 
-        characterController.Move(velocity * Time.fixedDeltaTime);
+        movementComponent.Move(velocity * deltaTime);
 
-        if(characterController.isGrounded)
+        if(movementComponent.IsGrounded)
         {
             verticalSpeed = 0f;
-            airJumpsPerformed = 0;
         }
     }
 
