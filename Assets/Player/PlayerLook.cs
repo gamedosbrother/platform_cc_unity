@@ -2,55 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerLook : MonoBehaviour
+public class PlayerLook
 {
 
-	[SerializeField]
-    [Range(0f, 5f)]
-    private float sensitivity = 3f;
-	[SerializeField]
+    private float sensitivity;
     private Vector2 minimum;
-	[SerializeField]
     private Vector2 maximum;
 
 	private Vector2 rotation;
 	private Quaternion originalRotation;
 
-	private Camera camera;
-
-    void Awake()
+    public PlayerLook(Quaternion _originalRotation, float _sensitivity, Vector2 _minimum, Vector2 _maximum)
     {
-        originalRotation = transform.rotation;
-		Cursor.lockState = CursorLockMode.None;
-        
-        camera = Camera.main;
+        originalRotation = _originalRotation;
+		sensitivity = _sensitivity;
+		minimum = _minimum;
+		maximum = _maximum;
     }
 
-    void Start()
+    public Quaternion LookHorizontalAxis(float movement)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-		if (Input.GetKeyDown (KeyCode.P)) {
-			if (Cursor.lockState == CursorLockMode.Locked) Cursor.lockState = CursorLockMode.None;
-			else Cursor.lockState = CursorLockMode.Locked;
-		}
-        
-		// Read the mouse input axis
-		rotation.x += Input.GetAxis ("Mouse X") * sensitivity;
-		rotation.y += Input.GetAxis ("Mouse Y") * sensitivity;
-
+		rotation.x += movement * sensitivity;
 		rotation.x = ClampAngle (rotation.x, minimum.x, maximum.x);
-		rotation.y = ClampAngle (rotation.y, minimum.y, maximum.y);
-
 		Quaternion xQuaternion = Quaternion.AngleAxis (rotation.x, Vector3.up);
+		
+		return originalRotation * xQuaternion;
+    }
+
+    public Quaternion LookVerticalAxis(float movement)
+    {
+		rotation.y += movement * sensitivity;
+		rotation.y = ClampAngle (rotation.y, minimum.y, maximum.y);
 		Quaternion yQuaternion = Quaternion.AngleAxis (rotation.y, -Vector3.right);
 
-		transform.localRotation = originalRotation * xQuaternion;
-		camera.transform.localRotation = originalRotation * yQuaternion;
+		return originalRotation * yQuaternion;
     }
 
 	float ClampAngle (float angle, float min, float max)

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IMovementComponent
+public interface ICharacterControllerWrapper
 {
     bool IsGrounded { get; }
     void Move(Vector3 velocity);

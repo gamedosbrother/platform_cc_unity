@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class MovementComponent : IMovementComponent
+public class CharacterControllerWrapper : ICharacterControllerWrapper
 {
 
     private CharacterController characterController;
 
     public bool IsGrounded { get { return characterController.isGrounded; } }
 
-    public MovementComponent(CharacterController _characterController)
+    public CharacterControllerWrapper(CharacterController _characterController)
     {
         characterController = _characterController;
     }

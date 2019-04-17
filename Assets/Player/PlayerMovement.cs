@@ -21,11 +21,11 @@ public class PlayerMovement
 
     private float verticalSpeed;
 
-    private IMovementComponent movementComponent;
+    private ICharacterControllerWrapper characterController;
 
-    public PlayerMovement(IMovementComponent _movementComponent, float _moveSpeed, float _acceleration, float _jumpHeight, int _airJumpsAmount, float _gravity = 10f)
+    public PlayerMovement(ICharacterControllerWrapper _characterController, float _moveSpeed, float _acceleration, float _jumpHeight, int _airJumpsAmount, float _gravity = 10f)
     {
-        movementComponent = _movementComponent;
+        characterController = _characterController;
         
         moveSpeed = _moveSpeed;
         acceleration = _acceleration;
@@ -50,11 +50,19 @@ public class PlayerMovement
         Vector3 velocity = moveVelocity;
         velocity.y = verticalSpeed;
 
-        movementComponent.Move(velocity * deltaTime);
+        characterController.Move(velocity * deltaTime);
 
-        if(movementComponent.IsGrounded)
+        if(characterController.IsGrounded)
         {
             verticalSpeed = 0f;
+        }
+    }
+
+    public void Jump()
+    {
+        if(characterController.IsGrounded)
+        {
+            verticalSpeed = jumpForce;
         }
     }
 

@@ -169,8 +169,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6290975324177409108}
   - component: {fileID: 6290975324177409106}
-  - component: {fileID: 3829014715537074781}
-  - component: {fileID: 6290975324177409107}
+  - component: {fileID: 1169660999399174105}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -212,7 +211,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3829014715537074781
+--- !u!114 &1169660999399174105
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -221,25 +220,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6290975324177409111}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cfd96da3c885ee46aa156543f43bfcb, type: 3}
+  m_Script: {fileID: 11500000, guid: 74bacfe9121952443aaa62c47030147c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gravity: 10
   moveSpeed: 5
   acceleration: 25
   jumpHeight: 2
   airJumpsAmount: 1
---- !u!114 &6290975324177409107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6290975324177409111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4b0930f8475c2041903d98cfa16421b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   sensitivity: 3
   minimum: {x: -360, y: -60}
   maximum: {x: 360, y: -16}

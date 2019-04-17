@@ -17,7 +17,7 @@ namespace Tests
             Vector3 expectedMoveMotion = new Vector3(1f, -10f, 1f);
 
             // Mocking MovementComponent
-            IMovementComponent movementMock = Substitute.For<IMovementComponent>();
+            ICharacterControllerWrapper movementMock = Substitute.For<ICharacterControllerWrapper>();
             movementMock.IsGrounded.Returns(true);
 
             // Defining values os player movement
@@ -42,7 +42,7 @@ namespace Tests
             Vector3 expectedSecondMoveMotion = new Vector3(0f, -20f, 0f);
 
             // Mocking MovementComponent
-            IMovementComponent movementMock = Substitute.For<IMovementComponent>();
+            ICharacterControllerWrapper movementMock = Substitute.For<ICharacterControllerWrapper>();
             movementMock.IsGrounded.Returns(false);
 
             // Defining values os player movement
@@ -68,7 +68,7 @@ namespace Tests
             Vector3 expectedMoveMotion = new Vector3(.5f, -2.5f, .5f);
 
             // Mocking MovementComponent
-            IMovementComponent movementMock = Substitute.For<IMovementComponent>();
+            ICharacterControllerWrapper movementMock = Substitute.For<ICharacterControllerWrapper>();
             movementMock.IsGrounded.Returns(true);
 
             // Defining values os player movement
@@ -92,7 +92,7 @@ namespace Tests
             Vector3 expectedFirstMoveMotion = new Vector3(.5f, -10f, 0f);
 
             // Mocking MovementComponent
-            IMovementComponent movementMock = Substitute.For<IMovementComponent>();
+            ICharacterControllerWrapper movementMock = Substitute.For<ICharacterControllerWrapper>();
             movementMock.IsGrounded.Returns(true);
 
             // Defining values os player movement
@@ -117,7 +117,7 @@ namespace Tests
             Vector3 expectedThirdMoveMotion = new Vector3(0f, -10f, 0f);
 
             // Mocking MovementComponent
-            IMovementComponent movementMock = Substitute.For<IMovementComponent>();
+            ICharacterControllerWrapper movementMock = Substitute.For<ICharacterControllerWrapper>();
 
             // Defining values os player movement
             float playerMoveSpeed = 0f;
@@ -139,6 +139,85 @@ namespace Tests
             playerMovement.Move(1f);
             movementMock.IsGrounded.Returns(true);
             movementMock.Received().Move(expectedThirdMoveMotion);
+        }
+        
+        [Test]
+        public void PlayerMovement_Jump_ShouldSetVelocity_ToJumpForce()
+        {
+            // Defines the expected values
+            // jumpForce = SQRT( jumpHeight * 2 * gravity )
+            float expectedJumpForce = Mathf.Sqrt(1f * 2f * 10f);
+            Vector3 expectedMotion = new Vector3(0f, expectedJumpForce - 10f, 0f);
+
+            // Mocking MovementComponent
+            ICharacterControllerWrapper movementMock = Substitute.For<ICharacterControllerWrapper>();
+
+            // Defining values os player movement
+            float jumpHeight = 1f;
+            float gravity = 10f;
+            PlayerMovement playerMovement = new PlayerMovement(movementMock, 0f, 0f, jumpHeight, 0, gravity);
+
+            // Call the player movement methods
+            movementMock.IsGrounded.Returns(true);
+            playerMovement.Jump();
+
+            playerMovement.Move(1f);
+            movementMock.Received().Move(expectedMotion);
+
+        }
+        
+        [Test]
+        public void PlayerMovement_Jump_ShouldNotJump_IfNotGrounded()
+        {
+            // Defines the expected values
+            // jumpForce = SQRT( jumpHeight * 2 * gravity )
+            float expectedJumpForce = Mathf.Sqrt(1f * 2f * 10f);
+            Vector3 expectedMotion = new Vector3(0f, -10f, 0f);
+
+            // Mocking MovementComponent
+            ICharacterControllerWrapper movementMock = Substitute.For<ICharacterControllerWrapper>();
+
+            // Defining values os player movement
+            float jumpHeight = 1f;
+            float gravity = 10f;
+            PlayerMovement playerMovement = new PlayerMovement(movementMock, 0f, 0f, jumpHeight, 0, gravity);
+
+            // Call the player movement methods
+            movementMock.IsGrounded.Returns(false);
+            playerMovement.Jump();
+
+            playerMovement.Move(1f);
+            movementMock.Received().Move(expectedMotion);
+
+        }
+        
+        [Test]
+        public void PlayerMovement_Jump_ShouldApply_Gravity()
+        {
+            // Defines the expected values
+            // jumpForce = SQRT( jumpHeight * 2 * gravity )
+            float expectedJumpForce = Mathf.Sqrt(1f * 2f * 10f);
+            Vector3 expectedMotion = new Vector3(0f, expectedJumpForce - 10f, 0f);
+            Vector3 expectedGravityMotion = new Vector3(0f, expectedJumpForce - 20f, 0f);
+
+            // Mocking MovementComponent
+            ICharacterControllerWrapper movementMock = Substitute.For<ICharacterControllerWrapper>();
+
+            // Defining values os player movement
+            float jumpHeight = 1f;
+            float gravity = 10f;
+            PlayerMovement playerMovement = new PlayerMovement(movementMock, 0f, 0f, jumpHeight, 0, gravity);
+
+            // Call the player movement methods
+            movementMock.IsGrounded.Returns(true);
+            playerMovement.Jump();
+
+            playerMovement.Move(1f);
+            movementMock.Received().Move(expectedMotion);
+
+            playerMovement.Move(1f);
+            movementMock.Received().Move(expectedMotion);
+
         }
         
     }
